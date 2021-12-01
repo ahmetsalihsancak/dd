@@ -131,35 +131,34 @@ namespace dd
         *               int minX: Küçük olan x koordinat değeri
         *               int maxY: Büyük olan y koordinat değeri
         *               int minY: Küçük olan y koordinat değeri
+        *               int offset: Dikdörtgen köşe noktaları için gerekli ayar değeri
         *  @output:     RectangleSpecs rectangleScpecs_s: İlgili değerler RectangleSpecs struct'ına
         *               yazdırılır ve çıktı olarak bu struct verilir
         *  @comment:    Eğer ki dikdörtgen oluşturmayacak bir şekil çizilirse (dümdüz bir path veya 
         *               tek bir nokta) bu şekli dikdörtgene benzetmek için gerekli işlemleri de 
-        *               içermektedir.
-        *               Bu çizilen düz path veya tek nokta hangi eksen doğrultusunda çizilmişse 
-        *               o eksenin max ve min koordinatları aynı çıkacağı için, (nokta için her iki 
-        *               eksen de aynıdır) max koordinatına +1 eklenerek yükseklik ve genişliğin 
-        *               0 olmaması sağlanmıştır.
+        *               içermektedir. Bu işlemi offset değeri ile ayarlamaktadır.
+        *               Offset değerini örnekle açıklamak gerekirse; 
+        *               offset = 0 olduğu durumda ilgili path'in sınır noktaları, çizilecek olan
+        *               dikdörtgenin tam olarak kenarların bulunmaktadır.
+        *               offset = 1 olduğu durumda ise dikdörtgen, path'in sınır noktalarından 1 birim
+        *               dışarıda olacak şekilde çizilecektir. Bu durumda path sınır noktaları
+        *               dikdörtgenin alanı içerisinde olacaktır.
+        *               offset = -1 olması durumunda ise path sınır noktaları dikdörtgenin 1 birim
+        *               dışında olacaktır.
         *****************************************************************************************/
-        RectangleSpecs calculate_rectangle(int maxX, int minX, int maxY, int minY) 
+        RectangleSpecs calculate_rectangle(int maxX, int minX, int maxY, int minY, int offset) 
         {
-            RectangleSpecs rectangleSpecs_s = new RectangleSpecs(); 
-            if (maxX == minX)
+            RectangleSpecs rectangleSpecs_s = new RectangleSpecs();
+            if (offset == 0 && ((maxX == minX) || (maxY == minY)))
             {
-                rectangleSpecs_s.W = 1;
+                offset = 1;
             }
-            else
-            {
-                rectangleSpecs_s.W = (maxX - minX);
-            }
-            if (maxY == minY)
-            {
-                rectangleSpecs_s.H = 1;
-            }
-            else
-            {
-                rectangleSpecs_s.H = (maxY - minY);
-            }
+            maxX = maxX + offset;
+            minX = minX - offset;
+            maxY = maxY + offset;
+            minY = minY - offset;
+            rectangleSpecs_s.W = (maxX - minX);
+            rectangleSpecs_s.H = (maxY - minY);
             rectangleSpecs_s.AREA = rectangleSpecs_s.W * rectangleSpecs_s.H;
             rectangleSpecs_s.COORDS_X = new int[4];
             rectangleSpecs_s.COORDS_Y = new int[4];
@@ -183,14 +182,14 @@ namespace dd
         *  @output:     RectangleSpecs rectangleScpecs_s: RectangleSpecs struct'ı doldurulur ve
         *               kullanılmak üzere hazır olarak çıktı verilir
         *****************************************************************************************/
-        public RectangleSpecs calculate(int area, int path_no, int[] x, int[] y)
+        public RectangleSpecs calculate(int area, int path_no, int[] x, int[] y, int offset)
         {
             RectangleSpecs rectangleSpecs_s = new RectangleSpecs();
             int maxX = max_coords(x);
             int maxY = max_coords(y);
             int minX = min_coords(x);
             int minY = min_coords(y);
-            rectangleSpecs_s = calculate_rectangle(maxX, minX, maxY, minY);
+            rectangleSpecs_s = calculate_rectangle(maxX, minX, maxY, minY, offset);
             if (area >= rectangleSpecs_s.AREA)
             {
                 rectangleSpecs_s.IS_IT_OK = true;

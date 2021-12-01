@@ -50,6 +50,7 @@ namespace dd
         Graphics graphics;
         Dictionary<colors, Color> colors_d;
         Array col_enum_val;
+        int offset;
 
         public enum colors
         {
@@ -69,6 +70,9 @@ namespace dd
             coordsY = new List<int>();
             path_counter = 0;
             alan = 0;
+            offset = 0;
+            label1.Text = "Alan: " + alan.ToString();
+            label7.Text = "Offset Değeri: " + offset.ToString();
             hesaplamalar = new Hesaplamalar(this);
             pathDots_s = new PathDots();
             ListOfPaths = new List<PathDots>();
@@ -297,7 +301,7 @@ namespace dd
                 textBox3.AppendText("########## MAKE RECT ##########" + Environment.NewLine);
                 for (int i = 0; i < ListOfPaths.Count; i++) //path sayısı
                 {
-                    if (ListOfPaths[i].IS_ACTIVE == 1) DrawRectangle(graphics, hesaplamalar.calculate(alan, i, ListOfPaths[i].X, ListOfPaths[i].Y), 2);
+                    if (ListOfPaths[i].IS_ACTIVE == 1) DrawRectangle(graphics, hesaplamalar.calculate(alan, i, ListOfPaths[i].X, ListOfPaths[i].Y, offset), 2);
                 }
             }
             else
@@ -309,6 +313,29 @@ namespace dd
         private void panel3_Paint(object sender, PaintEventArgs e)
         {
             DrawExampleRectangle();
+        }
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            textBox3.AppendText("Offset Değeri: " + textBox2.Text + Environment.NewLine);
+            label7.Text = "Offset Değeri: " + textBox2.Text;
+            if (String.IsNullOrEmpty(textBox2.Text))
+            {
+                richTextBox1.AppendText("ERR: OFFSET DEĞERİ GİRİLMEMİŞ" + Environment.NewLine);
+            }
+            else
+            {
+                offset = int.Parse(textBox2.Text);
+            }
+            textBox2.Clear();
         }
     }
 }
