@@ -297,7 +297,7 @@ namespace dd
                 textBox3.AppendText("########## MAKE RECT ##########" + Environment.NewLine);
                 for (int i = 0; i < ListOfPaths.Count; i++) //path sayısı
                 {
-                    if (ListOfPaths[i].IS_ACTIVE == 1) DrawRectangle(graphics, hesaplamalar.calculate(alan, i, ListOfPaths[i].X, ListOfPaths[i].Y), 2);
+                    if (ListOfPaths[i].IS_ACTIVE == 1) DrawRectangle(graphics, hesaplamalar.calculate(alan, i, ListOfPaths[i].X, ListOfPaths[i].Y, 10), 2);
                 }
             }
             else
