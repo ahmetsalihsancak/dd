@@ -54,20 +54,12 @@ namespace dd
             public int W
             {
                 get { return w; }
-                set 
-                {
-                    if (value == 0) w = 1;
-                    else w = value;
-                }
+                set { w = value; }
             }
             public int H
             {
                 get { return h; }
-                set
-                {
-                    if (value == 0) h = 1;
-                    else h = value;
-                }
+                set { h = value; }
             }
             public bool IS_IT_OK
             {
@@ -134,10 +126,7 @@ namespace dd
         *               int offset: Dikdörtgen köşe noktaları için gerekli ayar değeri
         *  @output:     RectangleSpecs rectangleScpecs_s: İlgili değerler RectangleSpecs struct'ına
         *               yazdırılır ve çıktı olarak bu struct verilir
-        *  @comment:    Eğer ki dikdörtgen oluşturmayacak bir şekil çizilirse (dümdüz bir path veya 
-        *               tek bir nokta) bu şekli dikdörtgene benzetmek için gerekli işlemleri de 
-        *               içermektedir. Bu işlemi offset değeri ile ayarlamaktadır.
-        *               Offset değerini örnekle açıklamak gerekirse; 
+        *  @comment:    Offset değerini örnekle açıklamak gerekirse; 
         *               offset = 0 olduğu durumda ilgili path'in sınır noktaları, çizilecek olan
         *               dikdörtgenin tam olarak kenarların bulunmaktadır.
         *               offset = 1 olduğu durumda ise dikdörtgen, path'in sınır noktalarından 1 birim
