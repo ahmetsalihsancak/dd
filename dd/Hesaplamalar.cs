@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace dd
+﻿namespace dd
 {
     public class Hesaplamalar
     {
@@ -54,20 +48,12 @@ namespace dd
             public int W
             {
                 get { return w; }
-                set 
-                {
-                    if (value == 0) w = 1;
-                    else w = value;
-                }
+                set { w = value; }
             }
             public int H
             {
                 get { return h; }
-                set
-                {
-                    if (value == 0) h = 1;
-                    else h = value;
-                }
+                set { h = value; }
             }
             public bool IS_IT_OK
             {
