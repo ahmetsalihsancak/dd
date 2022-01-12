@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace dd
 {
     public class Hesaplamalar
@@ -83,7 +78,7 @@ namespace dd
          *  @input:     int[] coord: Bir eksenin koordinat değerlerinin bulunduğu array
          *  @output:    int max: Girdi olarak verilen değerlerin en büyüğü
          *****************************************************************************************/
-        int max_coords(int[] coord)
+        private int max_coords(int[] coord)
         {
             int max = 0;
             for (int a = 0; a < coord.Length; a++)
@@ -102,7 +97,7 @@ namespace dd
          *  @input:     int[] coord: Bir eksenin koordinat değerlerinin bulunduğu array
          *  @output:    int min: Girdi olarak verilen değerlerin en küçüğü
          *****************************************************************************************/
-        int min_coords(int[] coord)
+        private int min_coords(int[] coord)
         {
             int min = 0;
             for (int a = 0; a < coord.Length; a++)
@@ -124,6 +119,7 @@ namespace dd
         *               int maxY: Büyük olan y koordinat değeri
         *               int minY: Küçük olan y koordinat değeri
         *               int offset: Dikdörtgen köşe noktaları için gerekli ayar değeri
+        *               int coordType: İşlemlerin yapılacak olduğu koordinat sisteminin tipi
         *  @output:     RectangleSpecs rectangleScpecs_s: İlgili değerler RectangleSpecs struct'ına
         *               yazdırılır ve çıktı olarak bu struct verilir
         *  @comment:    Offset değerini örnekle açıklamak gerekirse; 
@@ -134,8 +130,13 @@ namespace dd
         *               dikdörtgenin alanı içerisinde olacaktır.
         *               offset = -1 olması durumunda ise path sınır noktaları dikdörtgenin 1 birim
         *               dışında olacaktır.
+        *               Koordinat türleri şöyledir;
+        *               1 = x ekseninde sağa doğru artış, y ekseninde yukarı yönde artış (kartezyen)
+        *               2 = x ekseninde sağa doğru artış, y ekseninde aşağı yönde artış (kullandığımız)
+        *               3 = x ekseninde sola doğru artış, y ekseninde yukarı yönde artış
+        *               4 = x ekseninde sola doğru artış, y ekseninde aşağı yönde artış
         *****************************************************************************************/
-        RectangleSpecs calculate_rectangle(int maxX, int minX, int maxY, int minY, int offset) 
+        private RectangleSpecs calculate_rectangle(int maxX, int minX, int maxY, int minY, int offset, int coordType) 
         {
             RectangleSpecs rectangleSpecs_s = new RectangleSpecs();
             if (offset == 0 && ((maxX == minX) || (maxY == minY)))
@@ -151,14 +152,59 @@ namespace dd
             rectangleSpecs_s.AREA = rectangleSpecs_s.W * rectangleSpecs_s.H;
             rectangleSpecs_s.COORDS_X = new int[4];
             rectangleSpecs_s.COORDS_Y = new int[4];
-            rectangleSpecs_s.COORDS_X[0] = minX;
-            rectangleSpecs_s.COORDS_Y[0] = minY; //koordinat sistemi y ekseni ters, yani aşağı inildikçe artıyor, normal değeri: maxY
-            rectangleSpecs_s.COORDS_X[1] = rectangleSpecs_s.COORDS_X[0] + rectangleSpecs_s.W;
-            rectangleSpecs_s.COORDS_Y[1] = rectangleSpecs_s.COORDS_Y[0];
-            rectangleSpecs_s.COORDS_X[2] = rectangleSpecs_s.COORDS_X[1];
-            rectangleSpecs_s.COORDS_Y[2] = rectangleSpecs_s.COORDS_Y[1] + rectangleSpecs_s.H;
-            rectangleSpecs_s.COORDS_X[3] = rectangleSpecs_s.COORDS_X[0];
-            rectangleSpecs_s.COORDS_Y[3] = rectangleSpecs_s.COORDS_Y[2];
+            switch (coordType)
+            {
+                case 1:
+                    rectangleSpecs_s.COORDS_X[0] = minX;
+                    rectangleSpecs_s.COORDS_Y[0] = maxY;
+                    rectangleSpecs_s.COORDS_X[1] = rectangleSpecs_s.COORDS_X[0] + rectangleSpecs_s.W;
+                    rectangleSpecs_s.COORDS_Y[1] = rectangleSpecs_s.COORDS_Y[0];
+                    rectangleSpecs_s.COORDS_X[2] = rectangleSpecs_s.COORDS_X[1];
+                    rectangleSpecs_s.COORDS_Y[2] = rectangleSpecs_s.COORDS_Y[1] - rectangleSpecs_s.H;
+                    rectangleSpecs_s.COORDS_X[3] = rectangleSpecs_s.COORDS_X[0];
+                    rectangleSpecs_s.COORDS_Y[3] = rectangleSpecs_s.COORDS_Y[2];
+                    break;
+                case 2:
+                    rectangleSpecs_s.COORDS_X[0] = minX;
+                    rectangleSpecs_s.COORDS_Y[0] = minY;
+                    rectangleSpecs_s.COORDS_X[1] = rectangleSpecs_s.COORDS_X[0] + rectangleSpecs_s.W;
+                    rectangleSpecs_s.COORDS_Y[1] = rectangleSpecs_s.COORDS_Y[0];
+                    rectangleSpecs_s.COORDS_X[2] = rectangleSpecs_s.COORDS_X[1];
+                    rectangleSpecs_s.COORDS_Y[2] = rectangleSpecs_s.COORDS_Y[1] + rectangleSpecs_s.H;
+                    rectangleSpecs_s.COORDS_X[3] = rectangleSpecs_s.COORDS_X[0];
+                    rectangleSpecs_s.COORDS_Y[3] = rectangleSpecs_s.COORDS_Y[2];
+                    break;
+                case 3:
+                    rectangleSpecs_s.COORDS_X[0] = maxX;
+                    rectangleSpecs_s.COORDS_Y[0] = maxY;
+                    rectangleSpecs_s.COORDS_X[1] = rectangleSpecs_s.COORDS_X[0] - rectangleSpecs_s.W;
+                    rectangleSpecs_s.COORDS_Y[1] = rectangleSpecs_s.COORDS_Y[0];
+                    rectangleSpecs_s.COORDS_X[2] = rectangleSpecs_s.COORDS_X[1];
+                    rectangleSpecs_s.COORDS_Y[2] = rectangleSpecs_s.COORDS_Y[1] - rectangleSpecs_s.H;
+                    rectangleSpecs_s.COORDS_X[3] = rectangleSpecs_s.COORDS_X[0];
+                    rectangleSpecs_s.COORDS_Y[3] = rectangleSpecs_s.COORDS_Y[2];
+                    break;
+                case 4:
+                    rectangleSpecs_s.COORDS_X[0] = maxX;
+                    rectangleSpecs_s.COORDS_Y[0] = minY;
+                    rectangleSpecs_s.COORDS_X[1] = rectangleSpecs_s.COORDS_X[0] - rectangleSpecs_s.W;
+                    rectangleSpecs_s.COORDS_Y[1] = rectangleSpecs_s.COORDS_Y[0];
+                    rectangleSpecs_s.COORDS_X[2] = rectangleSpecs_s.COORDS_X[1];
+                    rectangleSpecs_s.COORDS_Y[2] = rectangleSpecs_s.COORDS_Y[1] + rectangleSpecs_s.H;
+                    rectangleSpecs_s.COORDS_X[3] = rectangleSpecs_s.COORDS_X[0];
+                    rectangleSpecs_s.COORDS_Y[3] = rectangleSpecs_s.COORDS_Y[2];
+                    break;
+                default:
+                    rectangleSpecs_s.COORDS_X[0] = minX;
+                    rectangleSpecs_s.COORDS_Y[0] = minY; //koordinat sistemi y ekseni ters, yani aşağı inildikçe artıyor, normal değeri: maxY
+                    rectangleSpecs_s.COORDS_X[1] = rectangleSpecs_s.COORDS_X[0] + rectangleSpecs_s.W;
+                    rectangleSpecs_s.COORDS_Y[1] = rectangleSpecs_s.COORDS_Y[0];
+                    rectangleSpecs_s.COORDS_X[2] = rectangleSpecs_s.COORDS_X[1];
+                    rectangleSpecs_s.COORDS_Y[2] = rectangleSpecs_s.COORDS_Y[1] + rectangleSpecs_s.H;
+                    rectangleSpecs_s.COORDS_X[3] = rectangleSpecs_s.COORDS_X[0];
+                    rectangleSpecs_s.COORDS_Y[3] = rectangleSpecs_s.COORDS_Y[2];
+                    break;
+            }
             return rectangleSpecs_s;
         }
 
@@ -168,17 +214,24 @@ namespace dd
         *               int path_no: İşlemlerin yapılacağı path numarası
         *               int[] x: İlgili path'in x koordinatları
         *               int[] y: İlgili path'in y koordinatları
+        *               int offset: Dikdörtgen köşe noktaları için gerekli ayar değeri
+        *               int coordType: İşlemlerin yapılacak olduğu koordinat sisteminin tipi
         *  @output:     RectangleSpecs rectangleScpecs_s: RectangleSpecs struct'ı doldurulur ve
         *               kullanılmak üzere hazır olarak çıktı verilir
+        *  @comment:    Koordinat türleri şöyledir;
+        *               1 = x ekseninde sağa doğru artış, y ekseninde yukarı yönde artış (kartezyen)
+        *               2 = x ekseninde sağa doğru artış, y ekseninde aşağı yönde artış (kullandığımız)
+        *               3 = x ekseninde sola doğru artış, y ekseninde yukarı yönde artış
+        *               4 = x ekseninde sola doğru artış, y ekseninde aşağı yönde artış
         *****************************************************************************************/
-        public RectangleSpecs calculate(int area, int path_no, int[] x, int[] y, int offset)
+        public RectangleSpecs calculate(int area, int path_no, int[] x, int[] y, int offset, int coordType)
         {
             RectangleSpecs rectangleSpecs_s = new RectangleSpecs();
             int maxX = max_coords(x);
             int maxY = max_coords(y);
             int minX = min_coords(x);
             int minY = min_coords(y);
-            rectangleSpecs_s = calculate_rectangle(maxX, minX, maxY, minY, offset);
+            rectangleSpecs_s = calculate_rectangle(maxX, minX, maxY, minY, offset, coordType);
             if (area >= rectangleSpecs_s.AREA)
             {
                 rectangleSpecs_s.IS_IT_OK = true;

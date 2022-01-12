@@ -51,6 +51,7 @@ namespace dd
         Dictionary<colors, Color> colors_d;
         Array col_enum_val;
         int offset;
+        int coordType;
 
         public enum colors
         {
@@ -69,8 +70,9 @@ namespace dd
             coordsX = new List<int>();
             coordsY = new List<int>();
             path_counter = 0;
-            alan = 0;
+            alan = 25000;
             offset = 0;
+            coordType = 2;
             label1.Text = "Alan: " + alan.ToString();
             label7.Text = "Offset Değeri: " + offset.ToString();
             hesaplamalar = new Hesaplamalar(this);
@@ -206,7 +208,7 @@ namespace dd
         {
             coordsX.Add(x);
             coordsY.Add(y);
-            graphics.DrawLine(new Pen(GetColor(path_counter), 5), x, y, x + 1, y + 1);
+            graphics.FillRectangle(new SolidBrush(GetColor(path_counter)), (x - 2), (y - 2), 4, 4);
             textBox3.AppendText("Left Mouse clicked    " + "X:  " + x + "   Y:  " + y + Environment.NewLine +
                 "Point Counter: " + coordsX.Count() + Environment.NewLine);
         }
@@ -303,7 +305,7 @@ namespace dd
                 {
                     if (ListOfPaths[i].IS_ACTIVE == 1) 
                     {
-                        DrawRectangle(graphics, hesaplamalar.calculate(alan, i, ListOfPaths[i].X, ListOfPaths[i].Y, offset), 2);
+                        DrawRectangle(graphics, hesaplamalar.calculate(alan, i, ListOfPaths[i].X, ListOfPaths[i].Y, offset, coordType), 2);
                     } 
                 }
             }
